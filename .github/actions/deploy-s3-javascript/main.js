@@ -1,8 +1,17 @@
 const core = require('@actions/core');
-const github = require('@actions/github');
+// const github = require('@actions/github');
 const exec = require('@actions/exec');
 
 function run() {
+    // 1) Get some input values
+    const bucket = core.getInpu('bucket', { required: true });
+    const bucketRegion = core.getInpu('bucket-region', { required: true });
+    const distFolder = core.getInpu('dist-folder', { required: true });
+
+    // 2) Upload files
+    const s3Uri = `s3://${bucket}`
+    exec.exec(`aws s3 sync ${distFolder} ${s3Uri} --region ${bucketRegion}`) // AWS CLI is already on 'ubuntu-latest' image where Actions runs
+
     core.notice('Hello from my custom JavaScript Action!')
 }
 
